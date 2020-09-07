@@ -11,4 +11,6 @@ Description: This package provides a semi-supervised learning approach that inco
 License: GPL-3
 Encoding: UTF-8
 RoxygenNote: 7.1.0
+URL: https://github.com/celehs/SSL.validation/settings
+BugReports: https://github.com/celehs/SSL.validation/issues
 

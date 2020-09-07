@@ -1,0 +1,8 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+
+LICENSE
+README.Rmd
+data-raw
+pkgdown
+docs

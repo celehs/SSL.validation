@@ -103,13 +103,11 @@ ROC.est=function(alp1, alp0){
   list(AUC=AUC, fpr=omspec.0, tpr=sens.0)
 }
 
-
-# Transform data and apply EM algorithm, return the auc and full ROC table
-# INPUT
-# S : surrogate S
-# Y : labels containing NA
-# OUTPUT
-# list with auc and roc table
+#' Transform data and apply EM algorithm, return the auc and full ROC table
+#' @param S surrogate S
+#' @param Y labels containing NA
+#' @return list with auc and roc table
+#' @export
 roc.semi.superv=function(S, Y){
   alpha=0.9
   dat.quant = dat.quantile.transf(S,Y)
@@ -137,11 +135,11 @@ roc.semi.superv=function(S, Y){
   out
 }
 
-
-
-######## classic supervised method
-
-
+#' Transform data and apply EM algorithm, return the auc and full ROC table for classic supervised method
+#' @param S surrogate S
+#' @param Y labels containing NA
+#' @return list with auc and roc table
+#' @export
 roc.superv=function(S,Y)
 {
   yyi = S

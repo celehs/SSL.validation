@@ -1,0 +1,8 @@
+url: https://celehs.github.io/SSL.validation/
+
+template:
+  params:
+    bootswatch: spacelab
+
+navbar:
+  type: inverse

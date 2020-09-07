@@ -30,16 +30,26 @@ The function `roc.superv` takes as arguments S and Y from the small
 validation set only and provides a classic supervised method to estimate
 the ROC parameters.
 
+## Installation
+
+Install development version from GitHub.
+
+``` r
+# install.packages("remotes")
+remotes::install_github("celehs/SSL.validation")
+```
+
+Load the package into R.
+
+``` r
+library(SSL.validation)
+```
+
 ## Simulated Example
 
 ``` r
-source("R/functions_methods.R")
-source("R/functions_transform.R")
-```
-
-``` r
 set.seed(1234)
-dat <- read.csv("data-raw/data.csv")
+dat <- read.csv("https://raw.githubusercontent.com/celehs/SSL.validation/master/data-raw/data.csv")
 ```
 
 ``` r
@@ -57,7 +67,7 @@ system.time(res.ssl <- roc.semi.superv(dat$S,dat$Y))
     ## [1] 263
 
     ##    user  system elapsed 
-    ##  20.781   0.133  20.941
+    ##  20.264   0.093  20.368
 
 ``` r
 auc.ssl <- res.ssl$auc
@@ -89,7 +99,7 @@ system.time(res.sl <- roc.superv(dat.v$S,dat.v$Y))
     ## 'x' values
 
     ##    user  system elapsed 
-    ##   0.069   0.000   0.070
+    ##   0.006   0.000   0.006
 
 ``` r
 auc.sl <- res.sl$auc
