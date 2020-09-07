@@ -67,7 +67,7 @@ system.time(res.ssl <- roc.semi.superv(dat$S,dat$Y))
     ## [1] 263
 
     ##    user  system elapsed 
-    ##  20.264   0.093  20.368
+    ##  20.061   0.085  20.150
 
 ``` r
 auc.ssl <- res.ssl$auc
@@ -99,7 +99,7 @@ system.time(res.sl <- roc.superv(dat.v$S,dat.v$Y))
     ## 'x' values
 
     ##    user  system elapsed 
-    ##   0.006   0.000   0.006
+    ##   0.005   0.000   0.006
 
 ``` r
 auc.sl <- res.sl$auc

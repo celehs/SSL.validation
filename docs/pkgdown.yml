@@ -2,7 +2,7 @@ pandoc: 2.3.1
 pkgdown: 1.5.1
 pkgdown_sha: ~
 articles: []
-last_built: 2020-09-07T04:07Z
+last_built: 2020-09-07T04:16Z
 urls:
   reference: https://celehs.github.io/SSL.validation//reference
   article: https://celehs.github.io/SSL.validation//articles

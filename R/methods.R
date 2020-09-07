@@ -1,12 +1,11 @@
 
 ######## presented semi-supervised method
 
-# computes initial values in EM algorithm
-# INPUT
-# S : surrogate S
-# Y : labels containing NA
-# OUTPUT
-# probability estimates alpha1, alpha0 
+#' computes initial values in EM algorithm
+#' @param S surrogate S
+#' @param Y labels containing NA
+#' @return probability estimates alpha1, alpha0 
+#' @export 
 ini.FUN = function(S, Y){
   dat = cbind(S,Y)
   id.v=which(is.na(Y)!=1)
@@ -26,12 +25,11 @@ ini.FUN = function(S, Y){
   t
 }
 
-# EM algorithm
-# INPUT
-# S : surrogate S
-# Y : labels containing NA
-# OUTPUT
-# estimate p, alpha1, alpha0
+#' EM algorithm
+#' @param S surrogate S
+#' @param Y labels containing NA
+#' @return estimate p, alpha1, alpha0
+#' @export
 Est.EM = function(S, Y){
   dat = cbind(S,Y)
   id.v=which(is.na(Y)!=1)
@@ -103,7 +101,7 @@ ROC.est=function(alp1, alp0){
   list(AUC=AUC, fpr=omspec.0, tpr=sens.0)
 }
 
-#' Transform data and apply EM algorithm, return the auc and full ROC table
+#' Transform data and apply EM algorithm, return the auc and full ROC table (semi-supervised learning)
 #' @param S surrogate S
 #' @param Y labels containing NA
 #' @return list with auc and roc table
@@ -135,7 +133,7 @@ roc.semi.superv=function(S, Y){
   out
 }
 
-#' Transform data and apply EM algorithm, return the auc and full ROC table for classic supervised method
+#' Transform data and apply EM algorithm, return the auc and full ROC table (classic supervised method)
 #' @param S surrogate S
 #' @param Y labels containing NA
 #' @return list with auc and roc table
@@ -237,8 +235,3 @@ Sinv.FUN <- function(uu,Yi,Di,yes.smooth=F)
   yy0<-unique(sort(Yi,decreasing=T)); ss0 <- S.FUN(yy0,Yi,Di,yes.smooth=yes.smooth) 
   return(approx(ss0[!duplicated(ss0)],yy0[!duplicated(ss0)],uu,method="linear",f=0,rule=2)$y)
 }
-
-
-
-
-

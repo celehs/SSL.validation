@@ -30,5 +30,3 @@ dat.new.FUN = function(S,Y,h){
   dat.new = cbind.data.frame(S.new,Y)
   dat.new
 }
-
-
