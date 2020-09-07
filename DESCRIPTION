@@ -1,0 +1,14 @@
+Package: SSL.validation
+Type: Package
+Title: Semi-Supervised Learning (SSL) Validation
+Version: 0.1.0
+Authors@R: c(
+    person("Clara-Lea", "Bonzel", role = c("aut", "cre"), email = "clbonzel@hsph.harvard.edu"),
+    person("Chuan", "Hong", role = "aut"),
+    person("Tianxi", "Cai", role = "aut")
+    )
+Description: This package provides a semi-supervised learning approach that incorporates unlabeled data into the estimation of the receiver operating characteristic (ROC) curve parameters to address these issues. 
+License: GPL-3
+Encoding: UTF-8
+RoxygenNote: 7.1.0
+

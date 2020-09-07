@@ -1,0 +1,61 @@
+---
+title: "SSL Validation"
+output: github_document
+---
+
+## Overview
+
+Phenotyping algorithms based on Electronic Medical Records (EMR) aim to identify a patient’s disease status using the information in the health record.
+
+Algorithm evaluation in EMR data is often based on a small number of gold-standard labeled data. Two main issues are the difficulty in selecting the appropriate cut and the high variance in the accuracy parameter estimates.
+
+This package provides a semi-supervised learning approach that incorporates unlabeled data into the estimation of the receiver operating characteristic (ROC) curve parameters to address these issues. 
+
+The data consists of :
+
+- a small validation set with algorithm score S and label Y, which takes values 0 or 1
+	
+- a large unlabeled set containing only the algorithm score S.
+
+The main function `roc.semi.superv` takes as arguments S and Y and provides a semi-supervised estimation of the ROC parameters. 
+
+The function `roc.superv` takes as arguments S and Y from the small validation set only and provides a classic supervised method to estimate the ROC parameters.
+
+## Simulated Example
+
+```{r}
+source("R/functions_methods.R")
+source("R/functions_transform.R")
+```
+
+```{r}
+set.seed(1234)
+dat <- read.csv("data-raw/data.csv")
+```
+
+```{r}
+p.0 <- mean(dat$Y , na.rm = TRUE)
+id.v <- which(is.na(dat$Y) != 1)
+dat.v <- dat[id.v, ] # Labeled Data 
+```
+
+### Semi-Supervised Learning (SSL)
+
+```{r}
+system.time(res.ssl <- roc.semi.superv(dat$S,dat$Y))
+auc.ssl <- res.ssl$auc
+roc.ssl <- res.ssl$roc
+auc.ssl
+tail(roc.ssl)
+```
+
+### Supervised Learning (SL)
+
+```{r}
+system.time(res.sl <- roc.superv(dat.v$S,dat.v$Y))
+auc.sl <- res.sl$auc
+roc.sl <- res.sl$roc
+colnames(roc.sl) <- colnames(roc.ssl)
+auc.sl
+tail(roc.sl)
+```
