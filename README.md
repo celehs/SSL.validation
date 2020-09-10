@@ -3,7 +3,7 @@ SSL Validation
 
 ## Overview
 
-Phenotyping algorithms based on Electronic Medical Records (EMR) aim to
+Phenotyping algorithms based on Electronic Health Records (EHR) aim to
 identify a patient’s disease status using the information in the health
 record.
 
@@ -67,7 +67,7 @@ system.time(res.ssl <- roc.semi.superv(dat$S,dat$Y))
     ## [1] 263
 
     ##    user  system elapsed 
-    ##  20.061   0.085  20.150
+    ##  19.971   0.118  20.094
 
 ``` r
 auc.ssl <- res.ssl$auc

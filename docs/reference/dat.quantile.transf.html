@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • SSL.validation</title>
+<title>Normalize data using quantiles — dat.quantile.transf • SSL.validation</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Normalize data using quantiles — dat.quantile.transf" />
+<meta property="og:description" content="Normalize data using quantiles" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
@@ -105,66 +106,37 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Normalize data using quantiles</h1>
+    <small class="dont-index">Source: <a href='https://github.com/celehs/SSL.validation/blob/master/R/transform.R'><code>R/transform.R</code></a></small>
+    <div class="hidden name"><code>dat.quantile.transf.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>Normalize data using quantiles</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>dat.quantile.transf</span>(<span class='no'>S</span>, <span class='no'>Y</span>)</pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="Est.EM.html">Est.EM()</a></code> </p>
-        </td>
-        <td><p>EM algorithm</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="dat.quantile.transf.html">dat.quantile.transf()</a></code> </p>
-        </td>
-        <td><p>Normalize data using quantiles</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ini.FUN.html">ini.FUN()</a></code> </p>
-        </td>
-        <td><p>computes initial values in EM algorithm</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="roc.semi.superv.html">roc.semi.superv()</a></code> </p>
-        </td>
-        <td><p>Transform data and apply EM algorithm, return the auc and full ROC table (semi-supervised learning)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="roc.superv.html">roc.superv()</a></code> </p>
-        </td>
-        <td><p>Transform data and apply EM algorithm, return the auc and full ROC table (classic supervised method)</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>S</th>
+      <td><p>surrogate S</p></td>
+    </tr>
+    <tr>
+      <th>Y</th>
+      <td><p>labels containing NA</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>dataframe(S.new,Y) where S.new is the quantile transform of S</p>
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>

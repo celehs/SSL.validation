@@ -72,7 +72,7 @@
 <div id="overview" class="section level2">
 <h2 class="hasAnchor">
 <a href="#overview" class="anchor"></a>Overview</h2>
-<p>Phenotyping algorithms based on Electronic Medical Records (EMR) aim to identify a patient’s disease status using the information in the health record.</p>
+<p>Phenotyping algorithms based on Electronic Health Records (EHR) aim to identify a patient’s disease status using the information in the health record.</p>
 <p>Algorithm evaluation in EMR data is often based on a small number of gold-standard labeled data. Two main issues are the difficulty in selecting the appropriate cut and the high variance in the accuracy parameter estimates.</p>
 <p>This package provides a semi-supervised learning approach that incorporates unlabeled data into the estimation of the receiver operating characteristic (ROC) curve parameters to address these issues.</p>
 <p>The data consists of :</p>
@@ -107,7 +107,7 @@
 <div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co">## [1] 263</span></a>
 <a class="sourceLine" id="cb6-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb6-3" data-line-number="3"><span class="co">##    user  system elapsed </span></a>
-<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co">##  20.061   0.085  20.150</span></a></code></pre></div>
+<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co">##  19.971   0.118  20.094</span></a></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="r"><span class="no">auc.ssl</span> <span class="kw">&lt;-</span> <span class="no">res.ssl</span>$<span class="no">auc</span>
 <span class="no">roc.ssl</span> <span class="kw">&lt;-</span> <span class="no">res.ssl</span>$<span class="no">roc</span>
 <span class="no">auc.ssl</span></pre></div>

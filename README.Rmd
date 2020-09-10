@@ -5,7 +5,7 @@ output: github_document
 
 ## Overview
 
-Phenotyping algorithms based on Electronic Medical Records (EMR) aim to identify a patient’s disease status using the information in the health record.
+Phenotyping algorithms based on Electronic Health Records (EHR) aim to identify a patient’s disease status using the information in the health record.
 
 Algorithm evaluation in EMR data is often based on a small number of gold-standard labeled data. Two main issues are the difficulty in selecting the appropriate cut and the high variance in the accuracy parameter estimates.
 

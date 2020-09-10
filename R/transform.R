@@ -1,9 +1,9 @@
 
-# INPUT
-# S : surrogate S
-# Y : labels containing NA
-# OUTPUT
-# data.q : dataframe(S.new,Y) where S.new is the quantile transform of S
+#' Normalize data using quantiles
+#' @param S surrogate S
+#' @param Y labels containing NA
+#' @return dataframe(S.new,Y) where S.new is the quantile transform of S
+#' @export
 dat.quantile.transf = function(S,Y){
   f <- ecdf(S)
   S.new=f(S)
