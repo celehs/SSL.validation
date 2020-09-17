@@ -3,7 +3,7 @@ title: "SSL Validation"
 output: github_document
 ---
 
-## Overview
+## Introduction
 
 Phenotyping algorithms based on Electronic Health Records (EHR) aim to identify a patient’s disease status using the information in the health record.
 

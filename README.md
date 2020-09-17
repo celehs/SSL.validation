@@ -1,7 +1,7 @@
 SSL Validation
 ================
 
-## Overview
+## Introduction
 
 Phenotyping algorithms based on Electronic Health Records (EHR) aim to
 identify a patient’s disease status using the information in the health
@@ -67,7 +67,7 @@ system.time(res.ssl <- roc.semi.superv(dat$S,dat$Y))
     ## [1] 263
 
     ##    user  system elapsed 
-    ##  19.971   0.118  20.094
+    ##  24.509   0.918  28.679
 
 ``` r
 auc.ssl <- res.ssl$auc
@@ -99,7 +99,7 @@ system.time(res.sl <- roc.superv(dat.v$S,dat.v$Y))
     ## 'x' values
 
     ##    user  system elapsed 
-    ##   0.005   0.000   0.006
+    ##    0.01    0.00    0.01
 
 ``` r
 auc.sl <- res.sl$auc
