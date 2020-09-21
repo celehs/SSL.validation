@@ -1,6 +1,6 @@
 
-#' Normalize data using quantiles
-#' @param S surrogate S
+#' Normalize the data using quantiles
+#' @param S all surrogates S
 #' @param Y labels containing NA
 #' @return dataframe(S.new,Y) where S.new is the quantile transform of S
 #' @export
@@ -11,12 +11,11 @@ dat.quantile.transf = function(S,Y){
   dat.q
 }
 
-# INPUT
-# S : surrogate S
-# Y : labels containing NA
-# OUTPUT
-# data.new : dataframe(S.new,Y) where S.new  is obtained by taking bins of size h and 
-# replacing the data S by its mean in the bin
+#' Reduce the number of unique values of S. Take bins of size h and replacing the data S by its mean in the bin
+#' @param S all surrogates S
+#' @param Y labels containing NA
+#' @return dataframe(S.new,Y) where S.new is the transform of S
+#' @export
 dat.new.FUN = function(S,Y,h){
   # h number of levels
   C = cut(S,h)

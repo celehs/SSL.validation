@@ -1,13 +1,13 @@
 SSL Validation
 ================
 
-## Introduction
+## Overview
 
 Phenotyping algorithms based on Electronic Health Records (EHR) aim to
 identify a patient’s disease status using the information in the health
 record.
 
-Algorithm evaluation in EMR data is often based on a small number of
+Algorithm evaluation in EHR data is often based on a small number of
 gold-standard labeled data. Two main issues are the difficulty in
 selecting the appropriate cut and the high variance in the accuracy
 parameter estimates.
@@ -23,8 +23,9 @@ The data consists of :
 
   - a large unlabeled set containing only the algorithm score S.
 
-The main function `roc.semi.superv` takes as arguments S and Y and
-provides a semi-supervised estimation of the ROC parameters.
+The main function `roc.semi.superv` takes as arguments S and Y, where Y
+contains a large amount of missing values, and provides a
+semi-supervised estimation of the ROC parameters.
 
 The function `roc.superv` takes as arguments S and Y from the small
 validation set only and provides a classic supervised method to estimate
@@ -67,7 +68,7 @@ system.time(res.ssl <- roc.semi.superv(dat$S,dat$Y))
     ## [1] 263
 
     ##    user  system elapsed 
-    ##  24.509   0.918  28.679
+    ##  24.285   0.856  29.674
 
 ``` r
 auc.ssl <- res.ssl$auc
@@ -99,7 +100,7 @@ system.time(res.sl <- roc.superv(dat.v$S,dat.v$Y))
     ## 'x' values
 
     ##    user  system elapsed 
-    ##    0.01    0.00    0.01
+    ##   0.006   0.000   0.006
 
 ``` r
 auc.sl <- res.sl$auc

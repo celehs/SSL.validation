@@ -1,7 +1,7 @@
 
 ######## presented semi-supervised method
 
-#' computes initial values in EM algorithm
+#' Compute the initial values in the EM algorithm
 #' @param S surrogate S
 #' @param Y labels containing NA
 #' @return probability estimates alpha1, alpha0 
@@ -88,7 +88,11 @@ Est.EM = function(S, Y){
   res
 }
 
-# Compute AUC, FPR, TPR using alpha1, alpha0
+#' Compute AUC, FPR, TPR using alpha1, alpha0
+#' @param alp1 alpha1 vector of conditional probabilities of dimention length(unique(S))
+#' @param alp0 alpha0 vector of conditional probabilities of dimention length(unique(S))
+#' @return AUC, FPR, TPR 
+#' @export
 ROC.est=function(alp1, alp0){
   sens.0=1-cumsum(alp1)
   omspec.0=1-cumsum(alp0)
@@ -101,7 +105,7 @@ ROC.est=function(alp1, alp0){
   list(AUC=AUC, fpr=omspec.0, tpr=sens.0)
 }
 
-#' Transform data and apply EM algorithm, return the auc and full ROC table (semi-supervised learning)
+#' Transform the data using quantiles and apply EM algorithm, return the auc and full ROC table (semi-supervised learning)
 #' @param S surrogate S
 #' @param Y labels containing NA
 #' @return list with auc and roc table
@@ -133,9 +137,9 @@ roc.semi.superv=function(S, Y){
   out
 }
 
-#' Transform data and apply EM algorithm, return the auc and full ROC table (classic supervised method)
-#' @param S surrogate S
-#' @param Y labels containing NA
+#' Apply a classic supervised method to return the AUC and full ROC table 
+#' @param S surrogate of the small training set (all labeled)
+#' @param Y labels of the small labeled set (no NA)
 #' @return list with auc and roc table
 #' @export
 roc.superv=function(S,Y)
@@ -177,6 +181,10 @@ roc.superv=function(S,Y)
 
 ####### useful functions
 
+#' The logistic function : map the real space R to (0,1)
+#' @param xx a real number
+#' @return a number in (0,1)
+#' @export
 g.logit = function(xx){exp(xx)/(exp(xx)+1)}
 
 auc.FUN=function(TPR, FPR){
