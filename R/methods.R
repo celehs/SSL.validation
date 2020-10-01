@@ -1,11 +1,6 @@
 
 ######## presented semi-supervised method
 
-#' Compute the initial values in the EM algorithm
-#' @param S surrogate S
-#' @param Y labels containing NA
-#' @return probability estimates alpha1, alpha0 
-#' @export 
 ini.FUN = function(S, Y){
   dat = cbind(S,Y)
   id.v=which(is.na(Y)!=1)
@@ -25,11 +20,6 @@ ini.FUN = function(S, Y){
   t
 }
 
-#' EM algorithm
-#' @param S surrogate S
-#' @param Y labels containing NA
-#' @return estimate p, alpha1, alpha0
-#' @export
 Est.EM = function(S, Y){
   dat = cbind(S,Y)
   id.v=which(is.na(Y)!=1)
@@ -88,11 +78,6 @@ Est.EM = function(S, Y){
   res
 }
 
-#' Compute AUC, FPR, TPR using alpha1, alpha0
-#' @param alp1 alpha1 vector of conditional probabilities of dimention length(unique(S))
-#' @param alp0 alpha0 vector of conditional probabilities of dimention length(unique(S))
-#' @return AUC, FPR, TPR 
-#' @export
 ROC.est=function(alp1, alp0){
   sens.0=1-cumsum(alp1)
   omspec.0=1-cumsum(alp0)
@@ -112,17 +97,19 @@ ROC.est=function(alp1, alp0){
 #' @export
 roc.semi.superv=function(S, Y){
   alpha=0.9
-  dat.quant = dat.quantile.transf(S,Y)
-  h = floor(length(unique(dat.quant[,"S.new"]))^(alpha))+1
-  dat.bin = dat.new.FUN(dat.quant[,"S.new"],dat.quant[,"Y"],h)
-  S = dat.bin[,"S.new"]
-  Y = dat.bin[,"Y"]
-
+  h = floor(length(unique(S))^(alpha))+1
+  dat.bin = dat.new.FUN(S,Y,h)
+  dat.quant = dat.quantile.transf(dat.bin[,"S.new"],dat.bin[,"Y"])
+  S = dat.quant[,"S.new"]
+  Y = dat.quant[,"Y"]
+  
   par.est=Est.EM(S, Y)
   alp1=par.est$alpha1
   alp0=par.est$alpha0
   p1=par.est$p; p0=1-p1
-  cuts=par.est$Si.sorted
+  cuts.t=par.est$Si.sorted
+  cuts=quantile(dat.bin[,"S.new"],c(1:length(cuts.t))/length(cuts.t))
+  
   junk=ROC.est(alp1, alp0) ## revise this so it returns AUC, fpr and tpr
   auc=junk$AUC
   tpr=junk$tpr
@@ -169,22 +156,18 @@ roc.superv=function(S,Y)
     out.TPR = cbind(out.TPR,  TPR);  out.FPR  <- cbind(out.FPR,  FPR)
     PPV <- 1/(1+FPR*mu0/(TPR*mu1)); NPV <- 1/(1+(1-TPR)*mu1/((1-FPR)*mu0))
     out.PPV <- cbind(out.PPV, PPV); out.NPV <- cbind(out.NPV, NPV)
-    #AUC <- sum((sum.I(yyi[,k],"<=",Yi=yyi[,k],Vi=Di*wgti)+sum.I(yyi[,k],"<",Yi=yyi[,k],Vi=Di*wgti))*(1-Di)*wgti/2
-    #             )/(sum((1-Di)*wgti)*sum(Di*wgti))
     AUC = sum(S.FUN(yyi[,k],Yi=yyi[,k],Di*wgti,yes.smooth=yes.smooth)*(1-Di)*wgti)/sum((1-Di)*wgti)
     out.AUC <- c(out.AUC, AUC)
   }
-  out = list(auc=out.AUC,roc=matrix(c(out.yy,out.pp,out.FPR,out.TPR,out.PPV,out.NPV), ncol=6)[-1,])
+  out.roc <- matrix(c(out.yy,out.pp,out.FPR,out.TPR,out.PPV,out.NPV), ncol=6)[-1,]
+  colnames(out.roc) <- c("cut","p.pos","fpr","tpr","ppv","npv")
+  out = list(auc=out.AUC,roc=out.roc)
   out
 }
 
 
 ####### useful functions
 
-#' The logistic function : map the real space R to (0,1)
-#' @param xx a real number
-#' @return a number in (0,1)
-#' @export
 g.logit = function(xx){exp(xx)/(exp(xx)+1)}
 
 auc.FUN=function(TPR, FPR){
@@ -225,17 +208,6 @@ sum.I <- function(yy,FUN,Yi,Vi=NULL)
     Vi <- apply(as.matrix(Vi)[tmpind,,drop=F],2,cumsum)
     return(rbind(0,Vi)[pos+1,])
   } else return(pos)
-}
-convert <- function(fit) {
-  rochat.auc = fit$rochat[1]
-  rochat.values = matrix(fit$rochat[-1],ncol=6)
-  colnames(rochat.values) = c("cutoff","pos.rate","FPR","TPR","PPV","NPV")
-  roc.cv.auc = fit$roc.cv[1]
-  roc.cv.values = matrix(fit$roc.cv[-1],ncol=6)
-  colnames(roc.cv.values) = c("cutoff","pos.rate","FPR","TPR","PPV","NPV")
-  betahat = fit$beta[1:(grep("\\<bini",names(fit$beta))[1]-1)]
-  names(betahat) = gsub("\\<b\\.","",names(betahat))
-  return(list(ROC.hat.auc=rochat.auc, ROC.hat.values=rochat.values, ROC.cv.auc=roc.cv.auc,ROC.cv.values=roc.cv.values, beta=betahat, Y.hat=fit$Si))
 }
 
 Sinv.FUN <- function(uu,Yi,Di,yes.smooth=F)
