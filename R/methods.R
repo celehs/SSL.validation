@@ -1,6 +1,4 @@
 
-######## presented semi-supervised method
-
 ini.FUN = function(S, Y){
   dat = cbind(S,Y)
   id.v=which(is.na(Y)!=1)
@@ -96,6 +94,9 @@ ROC.est=function(alp1, alp0){
 #' @return list with auc and roc table
 #' @export
 roc.semi.superv=function(S, Y){
+  S.ini<-S
+  Y.ini<-Y
+  
   alpha=0.9
   h = floor(length(unique(S))^(alpha))+1
   dat.bin = dat.new.FUN(S,Y,h)
@@ -107,8 +108,7 @@ roc.semi.superv=function(S, Y){
   alp1=par.est$alpha1
   alp0=par.est$alpha0
   p1=par.est$p; p0=1-p1
-  cuts.t=par.est$Si.sorted
-  cuts=quantile(dat.bin[,"S.new"],c(1:length(cuts.t))/length(cuts.t))
+  cuts=par.est$Si.sorted
   
   junk=ROC.est(alp1, alp0) ## revise this so it returns AUC, fpr and tpr
   auc=junk$AUC
@@ -117,12 +117,15 @@ roc.semi.superv=function(S, Y){
   ppv = tpr*p1/(tpr*p1+fpr*p0)
   npv = (1-fpr)*p0/((1-fpr)*p0+(1-tpr)*p1)
   p.pos=unlist(lapply(1:length(cuts), function(ll) mean(S>=cuts[ll])))
+  cuts=quantile(S.ini,1-p.pos)
+  
   junk =cbind("cut"= cuts,"p.pos"=p.pos, "fpr"=round(fpr,2),"tpr"=tpr,"ppv"=ppv,"npv"=npv)
   fpr0=seq(.01,.99,by=.01)
   id.print=unlist(lapply(fpr0, function(x) which.min(abs(x-fpr))[1]))
   out=list(auc=auc,roc=junk[id.print,],alpha1=alp1,alpha0=alp0)
   out
 }
+
 
 #' Apply a classic supervised method to return the AUC and full ROC table 
 #' @param S surrogate of the small training set (all labeled)
@@ -164,9 +167,6 @@ roc.superv=function(S,Y)
   out = list(auc=out.AUC,roc=out.roc)
   out
 }
-
-
-####### useful functions
 
 g.logit = function(xx){exp(xx)/(exp(xx)+1)}
 
