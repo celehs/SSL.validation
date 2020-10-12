@@ -110,16 +110,17 @@ roc.semi.superv=function(S, Y){
   p1=par.est$p; p0=1-p1
   cuts=par.est$Si.sorted
   
-  junk=ROC.est(alp1, alp0) ## revise this so it returns AUC, fpr and tpr
+  junk=ROC.est(alp1, alp0) 
   auc=junk$AUC
   tpr=junk$tpr
   fpr=junk$fpr
   ppv = tpr*p1/(tpr*p1+fpr*p0)
   npv = (1-fpr)*p0/((1-fpr)*p0+(1-tpr)*p1)
+  fscore = 2*ppv*tpr/(ppv+tpr)
   p.pos=unlist(lapply(1:length(cuts), function(ll) mean(S>=cuts[ll])))
   cuts=quantile(S.ini,1-p.pos)
   
-  junk =cbind("cut"= cuts,"p.pos"=p.pos, "fpr"=round(fpr,2),"tpr"=tpr,"ppv"=ppv,"npv"=npv)
+  junk =cbind("cut"= cuts,"p.pos"=p.pos, "fpr"=round(fpr,2),"tpr"=tpr,"ppv"=ppv,"npv"=npv,"F.score"=fscore)
   fpr0=seq(.01,.99,by=.01)
   id.print=unlist(lapply(fpr0, function(x) which.min(abs(x-fpr))[1]))
   out=list(auc=auc,roc=junk[id.print,],alpha1=alp1,alpha0=alp0)
@@ -137,7 +138,7 @@ roc.superv=function(S,Y)
   yyi = S
   Di = Y
   yy0=0.5;fpr0=seq(0.01,0.99,0.01);wgti=NULL;yes.smooth=F
-  out.yy <- out.pp <- out.AUC <- out.TPR <- out.FPR <- out.PPV <- out.NPV <- NULL
+  out.yy <- out.pp <- out.AUC <- out.TPR <- out.FPR <- out.PPV <- out.NPV <- out.fscore <- NULL
   if(is.null(wgti)){wgti=rep(1,length(Di))}; yyi = as.matrix(yyi); pp=ncol(as.matrix(yyi));  
   mu0 = sum(wgti*(1-Di))/sum(wgti); mu1 = 1-mu0  
   for(k in 1:pp)
@@ -158,15 +159,18 @@ roc.superv=function(S,Y)
     out.pp = cbind(out.pp, S.FUN(yy,Yi=yyi[,k],wgti,yes.smooth=yes.smooth))
     out.TPR = cbind(out.TPR,  TPR);  out.FPR  <- cbind(out.FPR,  FPR)
     PPV <- 1/(1+FPR*mu0/(TPR*mu1)); NPV <- 1/(1+(1-TPR)*mu1/((1-FPR)*mu0))
+    fscore <- 2*PPV*TPR/(PPV+TPR)
     out.PPV <- cbind(out.PPV, PPV); out.NPV <- cbind(out.NPV, NPV)
+    out.fscore <- cbind(out.fscore,fscore)
     AUC = sum(S.FUN(yyi[,k],Yi=yyi[,k],Di*wgti,yes.smooth=yes.smooth)*(1-Di)*wgti)/sum((1-Di)*wgti)
     out.AUC <- c(out.AUC, AUC)
   }
-  out.roc <- matrix(c(out.yy,out.pp,out.FPR,out.TPR,out.PPV,out.NPV), ncol=6)[-1,]
-  colnames(out.roc) <- c("cut","p.pos","fpr","tpr","ppv","npv")
+  out.roc <- matrix(c(out.yy,out.pp,out.FPR,out.TPR,out.PPV,out.NPV,out.fscore), ncol=7)[-1,]
+  colnames(out.roc) <- c("cut","p.pos","fpr","tpr","ppv","npv","F.score")
   out = list(auc=out.AUC,roc=out.roc)
   out
 }
+
 
 g.logit = function(xx){exp(xx)/(exp(xx)+1)}
 
