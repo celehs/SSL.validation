@@ -2,18 +2,18 @@
 % Please edit documentation in R/methods.R
 \name{roc.superv}
 \alias{roc.superv}
-\title{Transform data and apply EM algorithm, return the auc and full ROC table (classic supervised method)}
+\title{Apply a classic supervised method to return the AUC and full ROC table}
 \usage{
 roc.superv(S, Y)
 }
 \arguments{
-\item{S}{surrogate S}
+\item{S}{surrogate of the small training set (all labeled)}
 
-\item{Y}{labels containing NA}
+\item{Y}{labels of the small labeled set (no NA)}
 }
 \value{
 list with auc and roc table
 }
 \description{
-Transform data and apply EM algorithm, return the auc and full ROC table (classic supervised method)
+Apply a classic supervised method to return the AUC and full ROC table
 }

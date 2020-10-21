@@ -7,7 +7,7 @@ output: github_document
 
 Phenotyping algorithms based on Electronic Health Records (EHR) aim to identify a patient’s disease status using the information in the health record.
 
-Algorithm evaluation in EMR data is often based on a small number of gold-standard labeled data. Two main issues are the difficulty in selecting the appropriate cut and the high variance in the accuracy parameter estimates.
+Algorithm evaluation in EHR data is often based on a small number of gold-standard labeled data. Two main issues are the difficulty in selecting the appropriate cut and the high variance in the accuracy parameter estimates.
 
 This package provides a semi-supervised learning approach that incorporates unlabeled data into the estimation of the receiver operating characteristic (ROC) curve parameters to address these issues. 
 
@@ -17,7 +17,7 @@ The data consists of :
 	
 - a large unlabeled set containing only the algorithm score S.
 
-The main function `roc.semi.superv` takes as arguments S and Y and provides a semi-supervised estimation of the ROC parameters. 
+The main function `roc.semi.superv` takes as arguments S and Y, where Y contains a large amount of missing values, and provides a semi-supervised estimation of the ROC parameters. 
 
 The function `roc.superv` takes as arguments S and Y from the small validation set only and provides a classic supervised method to estimate the ROC parameters.
 

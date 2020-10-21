@@ -10,7 +10,6 @@ Authors@R: c(
 Description: This package provides a semi-supervised learning approach that incorporates unlabeled data into the estimation of the receiver operating characteristic (ROC) curve parameters to address these issues. 
 License: GPL-3
 Encoding: UTF-8
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 URL: https://github.com/celehs/SSL.validation/settings
 BugReports: https://github.com/celehs/SSL.validation/issues
-

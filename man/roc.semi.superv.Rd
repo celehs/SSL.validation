@@ -2,7 +2,7 @@
 % Please edit documentation in R/methods.R
 \name{roc.semi.superv}
 \alias{roc.semi.superv}
-\title{Transform data and apply EM algorithm, return the auc and full ROC table (semi-supervised learning)}
+\title{Transform the data using quantiles and apply EM algorithm, return the auc and full ROC table (semi-supervised learning)}
 \usage{
 roc.semi.superv(S, Y)
 }
@@ -15,5 +15,5 @@ roc.semi.superv(S, Y)
 list with auc and roc table
 }
 \description{
-Transform data and apply EM algorithm, return the auc and full ROC table (semi-supervised learning)
+Transform the data using quantiles and apply EM algorithm, return the auc and full ROC table (semi-supervised learning)
 }
