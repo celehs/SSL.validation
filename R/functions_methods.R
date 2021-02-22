@@ -1,4 +1,12 @@
 
+######## presented semi-supervised method
+
+# computes initial values in EM algorithm
+# INPUT
+# S : surrogate S
+# Y : labels containing NA
+# OUTPUT
+# probability estimates alpha1, alpha0 
 ini.FUN = function(S, Y){
   dat = cbind(S,Y)
   id.v=which(is.na(Y)!=1)
@@ -18,6 +26,12 @@ ini.FUN = function(S, Y){
   t
 }
 
+# EM algorithm
+# INPUT
+# S : surrogate S
+# Y : labels containing NA
+# OUTPUT
+# estimate p, alpha1, alpha0
 Est.EM = function(S, Y){
   dat = cbind(S,Y)
   id.v=which(is.na(Y)!=1)
@@ -70,12 +84,13 @@ Est.EM = function(S, Y){
     if(is.na(eps)){conv=0;break}
     if(k.step>4000){conv=0;break}
   }
-  print(k.step)
+  #print(k.step)
   if(conv==1){res=list(p=p, alpha1=alpha1, alpha0=alpha0, Si.sorted=Si.sorted)}
   if(conv==0){res=NA}
   res
 }
 
+# Compute AUC, FPR, TPR using alpha1, alpha0
 ROC.est=function(alp1, alp0){
   sens.0=1-cumsum(alp1)
   omspec.0=1-cumsum(alp0)
@@ -88,28 +103,37 @@ ROC.est=function(alp1, alp0){
   list(AUC=AUC, fpr=omspec.0, tpr=sens.0)
 }
 
-#' Transform the data using quantiles and apply EM algorithm, return the auc and full ROC table (semi-supervised learning)
-#' @param S surrogate S
-#' @param Y labels containing NA
-#' @return list with auc and roc table
-#' @export
+
+# Transform data and apply EM algorithm, return the auc and full ROC table
+# INPUT
+# S : surrogate S
+# Y : labels containing NA
+# OUTPUT
+# list with auc and roc table
 roc.semi.superv=function(S, Y){
   S.ini<-S
   Y.ini<-Y
   
+  # alpha=0.9
+  # dat.quant = dat.quantile.transf(S,Y)
+  # h = floor(length(unique(dat.quant[,"S.new"]))^(alpha))+1
+  # dat.bin = dat.new.FUN(dat.quant[,"S.new"],dat.quant[,"Y"],h)
+  # S = dat.bin[,"S.new"]
+  # Y = dat.bin[,"Y"]
+
   alpha=0.9
   h = floor(length(unique(S))^(alpha))+1
   dat.bin = dat.new.FUN(S,Y,h)
   dat.quant = dat.quantile.transf(dat.bin[,"S.new"],dat.bin[,"Y"])
   S = dat.quant[,"S.new"]
   Y = dat.quant[,"Y"]
-  
+
   par.est=Est.EM(S, Y)
   alp1=par.est$alpha1
   alp0=par.est$alpha0
   p1=par.est$p; p0=1-p1
   cuts=par.est$Si.sorted
-  
+
   junk=ROC.est(alp1, alp0) 
   auc=junk$AUC
   tpr=junk$tpr
@@ -120,39 +144,51 @@ roc.semi.superv=function(S, Y){
   p.pos=unlist(lapply(1:length(cuts), function(ll) mean(S>=cuts[ll])))
   cuts=quantile(S.ini,1-p.pos)
   
-  junk =cbind("cut"= cuts,"p.pos"=p.pos, "fpr"=round(fpr,2),"tpr"=tpr,"ppv"=ppv,"npv"=npv,"F.score"=fscore)
+  #junk =cbind("cut"= cuts,"p.pos"=p.pos, "fpr"=round(fpr,2),"tpr"=tpr,"ppv"=ppv,"npv"=npv)
+  junk =cbind("cut"= cuts,"p.pos"=p.pos,"fpr"=round(fpr,2),"tpr"=tpr,"ppv"=ppv,"npv"=npv,"F.score"=fscore)
   fpr0=seq(.01,.99,by=.01)
   id.print=unlist(lapply(fpr0, function(x) which.min(abs(x-fpr))[1]))
-  out=list(auc=auc,roc=junk[id.print,],alpha1=alp1,alpha0=alp0)
+  #out=list(auc=auc,roc=junk[id.print,],alpha1=alp1,alpha0=alp0)
+  out=list(auc=auc,roc=junk[id.print,])
   out
 }
 
+# cuts.t=par.est$Si.sorted
+# p.pos.t=unlist(lapply(1:length(cuts.t), function(ll) mean(S>=cuts.t[ll])))
+# cuts=1-quantile(S.ini,p.pos.t)
+# p.pos=unlist(lapply(1:length(cuts), function(ll) mean(S.ini>=cuts[ll])))
 
-#' Apply a classic supervised method to return the AUC and full ROC table 
-#' @param S surrogate of the small training set (all labeled)
-#' @param Y labels of the small labeled set (no NA)
-#' @return list with auc and roc table
-#' @export
+#cuts=par.est$Si.sorted
+#cuts=1-quantile(dat.bin[,"S.new"],p.pos)
+#cuts=1-quantile(S.ini,p.pos)
+## S, S.new
+# first get CUT_new (for example 0.03), and related p.pos
+# find use p.pos to find CUT from S, so that P(S>CUT)=p.pos
+# need to validate using simulation
+
+######## classic supervised method
+
+# 
 roc.superv=function(S,Y)
 {
   yyi = S
   Di = Y
   yy0=0.5;fpr0=seq(0.01,0.99,0.01);wgti=NULL;yes.smooth=F
   out.yy <- out.pp <- out.AUC <- out.TPR <- out.FPR <- out.PPV <- out.NPV <- out.fscore <- NULL
-  if(is.null(wgti)){wgti=rep(1,length(Di))}; yyi = as.matrix(yyi); pp=ncol(as.matrix(yyi));  
-  mu0 = sum(wgti*(1-Di))/sum(wgti); mu1 = 1-mu0  
+  if(is.null(wgti)){wgti=rep(1,length(Di))}; yyi = as.matrix(yyi); pp=ncol(as.matrix(yyi));
+  mu0 = sum(wgti*(1-Di))/sum(wgti); mu1 = 1-mu0
   for(k in 1:pp)
   {
-    yy = yy0; 
+    yy = yy0;
     if(!is.null(fpr0)){
-      tpr.all = S.FUN(yyi[,k],Yi=yyi[,k],Di*wgti,yes.smooth=yes.smooth); 
+      tpr.all = S.FUN(yyi[,k],Yi=yyi[,k],Di*wgti,yes.smooth=yes.smooth);
       fpr.all = S.FUN(yyi[,k],Yi=yyi[,k],(1-Di)*wgti,yes.smooth=yes.smooth);
-      TPR = approx(c(0,fpr.all,1),c(0,tpr.all,1),fpr0,method="linear",rule=2)$y; 
-      TPR = c(S.FUN(yy0,Yi=yyi[,k],Di*wgti,yes.smooth=yes.smooth), TPR); 
-      yy = c(yy,Sinv.FUN(fpr0,Yi=yyi[,k],(1-Di)*wgti,yes.smooth=yes.smooth))           
+      TPR = approx(c(0,fpr.all,1),c(0,tpr.all,1),fpr0,method="linear",rule=2)$y;
+      TPR = c(S.FUN(yy0,Yi=yyi[,k],Di*wgti,yes.smooth=yes.smooth), TPR);
+      yy = c(yy,Sinv.FUN(fpr0,Yi=yyi[,k],(1-Di)*wgti,yes.smooth=yes.smooth))
       FPR = S.FUN(yy,Yi=yyi[,k],(1-Di)*wgti,yes.smooth=yes.smooth)
     }else{
-      TPR = S.FUN(yy,Yi=yyi[,k],Di*wgti,yes.smooth=yes.smooth); 
+      TPR = S.FUN(yy,Yi=yyi[,k],Di*wgti,yes.smooth=yes.smooth);
       FPR = S.FUN(yy,Yi=yyi[,k],(1-Di)*wgti,yes.smooth=yes.smooth)
     }
     out.yy = cbind(out.yy, yy)
@@ -172,12 +208,14 @@ roc.superv=function(S,Y)
 }
 
 
+###### useful functions
+
 g.logit = function(xx){exp(xx)/(exp(xx)+1)}
 
 auc.FUN=function(TPR, FPR){
   sens=c(sort(TPR,decreasing=T),0); omspec=c(sort(FPR, decreasing=T),0)
   height = (sens[-1]+sens[-length(sens)])/2
-  width = -diff(omspec) 
+  width = -diff(omspec)
   AUC = sum(height*width)
   AUC
 }
@@ -203,7 +241,7 @@ sum.I <- function(yy,FUN,Yi,Vi=NULL)
 {
   if (FUN=="<"|FUN==">=") { yy <- -yy; Yi <- -Yi}
   # for each distinct ordered failure time t[j], number of Xi < t[j]
-  pos <- rank(c(yy,Yi),ties.method='f')[1:length(yy)]-rank(yy,ties.method='f')    
+  pos <- rank(c(yy,Yi),ties.method='f')[1:length(yy)]-rank(yy,ties.method='f')
   if (substring(FUN,2,2)=="=") pos <- length(Yi)-pos # number of Xi>= t[j]
   if (!is.null(Vi)) {
     ## if FUN contains '=', tmpind is the order of decending
@@ -213,9 +251,27 @@ sum.I <- function(yy,FUN,Yi,Vi=NULL)
     return(rbind(0,Vi)[pos+1,])
   } else return(pos)
 }
+# convert <- function(fit) {
+#   rochat.auc = fit$rochat[1]
+#   rochat.values = matrix(fit$rochat[-1],ncol=6)
+#   colnames(rochat.values) = c("cutoff","pos.rate","FPR","TPR","PPV","NPV")
+#   roc.cv.auc = fit$roc.cv[1]
+#   roc.cv.values = matrix(fit$roc.cv[-1],ncol=6)
+#   colnames(roc.cv.values) = c("cutoff","pos.rate","FPR","TPR","PPV","NPV")
+#   betahat = fit$beta[1:(grep("\\<bini",names(fit$beta))[1]-1)]
+#   names(betahat) = gsub("\\<b\\.","",names(betahat))
+#   return(list(ROC.hat.auc=rochat.auc, ROC.hat.values=rochat.values, ROC.cv.auc=roc.cv.auc,ROC.cv.values=roc.cv.values, beta=betahat, Y.hat=fit$Si))
+# }
 
 Sinv.FUN <- function(uu,Yi,Di,yes.smooth=F)
 {
-  yy0<-unique(sort(Yi,decreasing=T)); ss0 <- S.FUN(yy0,Yi,Di,yes.smooth=yes.smooth) 
+  yy0<-unique(sort(Yi,decreasing=T)); ss0 <- S.FUN(yy0,Yi,Di,yes.smooth=yes.smooth)
   return(approx(ss0[!duplicated(ss0)],yy0[!duplicated(ss0)],uu,method="linear",f=0,rule=2)$y)
 }
+
+
+
+
+
+
+
